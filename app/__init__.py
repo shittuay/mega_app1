@@ -16,7 +16,11 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
     login_manager.init_app(app)
-    
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return None
+
     # Register blueprints
     from app.budget import budget_bp
     from app.habit import habit_bp
@@ -37,6 +41,9 @@ def create_app():
     app.register_blueprint(community_bp, url_prefix='/community')
     app.register_blueprint(motivational_bp, url_prefix='/motivational')
     app.register_blueprint(weather_bp, url_prefix='/weather')
+
+    from app.ai_assistant import ai_bp
+    app.register_blueprint(ai_bp, url_prefix='/ai')
 
     # Initialize the database
     with app.app_context():
